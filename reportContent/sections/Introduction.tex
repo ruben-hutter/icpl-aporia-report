@@ -1,3 +1,13 @@
 \section{Introduction}
 
-The purpose of this section is to give a quick introduction about the project and its objectives.
+%The purpose of this section is to give a quick introduction about the project and its objectives.
+"Every program is open source if you know Assembly." - Unknown. But must this always be the case? What if we could write programs in a high level programming language and
+interleave it with many different programs making it (almost) impossible to reverse engineer the original program? The interleaving part of this problem has already been 
+solved by Ali Ajorian (TODO Luca: Insert Aporia Paper reference here) but the first part was where this project came into play.
+The goal was to create a compiler from the python subset $L_if$ to the aporia language $L_{cfi}$ allowing the original program to be obfuscated at a later point in time.
+This objective was achieved by generating two new intermediary languages $L_{if}^{sc}$ and $L_{if}^{flat}$, each with their own restrictions and compiling the input program 
+in three separate steps in order to finally reach the desired $L_{cfi}$ representation.
+
+
+In the following report, we will give an overview of the technical background before we explain the implementation of the project. We will also discuss the difficulties that were 
+encountered while coming up with solutions, evaluate the achieved outcomes, and reflect on the lessons learned during the course of this project.
