@@ -6,7 +6,7 @@ Program obfuscation is the process of transforming a program into a functionally
 Traditional obfuscation techniques rely on ad hoc transformations like control flow flattening, junk code insertion, or opaque predicates. However, these methods often fail against modern deobfuscation tools that leverage symbolic execution and AI-assisted static analysis~\cite{ajorian2024aporia}. 
 
 \subsection{Aporia: Instruction Decorrelation as an Obfuscation Strategy}
-Aporia introduces \textbf{instruction decorrelation}, a technique that breaks the one-to-one mapping between source and compiled instructions. Unlike traditional obfuscation, decorrelation \textbf{rearranges, delays, and duplicates instructions in a way that depends on runtime execution states}~\cite{ajorian2024aporia}. 
+Aporia introduces instruction decorrelation, a technique that breaks the one-to-one mapping between source and compiled instructions. Unlike traditional obfuscation, decorrelation rearranges, delays, and duplicates instructions in a way that depends on runtime execution states~\cite{ajorian2024aporia}. 
 
 This is achieved through two key mechanisms:
 \begin{itemize}
@@ -15,11 +15,11 @@ This is achieved through two key mechanisms:
 \end{itemize}
 
 \subsection{Security Model and Side-Channel Resistance}
-Aporia’s security model assumes an \textit{adversary capable of both static and dynamic analysis}. However, unlike most obfuscation methods, instruction decorrelation also offers protection against \textbf{speculative execution attacks} (e.g., Spectre, Meltdown) by eliminating direct data dependencies~\cite{ajorian2024aporia}. 
+Aporia’s security model assumes an \textit{adversary capable of both static and dynamic analysis}. However, unlike most obfuscation methods, instruction decorrelation also offers protection against speculative execution attacks (e.g., Spectre, Meltdown) by eliminating direct data dependencies~\cite{ajorian2024aporia}. 
 
-Additionally, the system \textbf{introduces phantom instructions}—instructions that appear valid to an attacker but do not contribute to actual program execution. This makes symbolic execution impractical.
+Additionally, the system introduces phantom instructions; instructions that appear valid to an attacker but do not contribute to actual program execution. This makes symbolic execution impractical.
 
-\subsection{The Lcfi Language and Its Role in Obfuscation}
+\subsection{The $L_{cfi}$ Language and Its Role in Obfuscation}
 Lcfi (the target language of our compiler) is specifically designed to support instruction decorrelation. It employs:
 \begin{itemize}
     \item \textbf{Predicate-based execution}, where each instruction is executed only if a dynamic condition holds.
@@ -28,7 +28,7 @@ Lcfi (the target language of our compiler) is specifically designed to support i
 \end{itemize}
 
 \subsection{Relation to Our Project}
-Our project builds upon Aporia’s work by designing a \textbf{compiler from Lif to Lcfi}, enabling automatic program transformation for obfuscation. The compiler translates a subset of Python (Lif) into Lcfi through multiple intermediate representations, enforcing instruction decorrelation at various stages.
+Our project builds upon Aporia’s work by designing a compiler from $L_{if}$ to $L_{cfi}$, enabling automatic program transformation for obfuscation. The compiler translates a subset of Python ($L_{if}$) into $L_{cfi}$ through multiple intermediate representations, enforcing instruction decorrelation at various stages.
 
-By leveraging Aporia’s \textbf{randomized scheduling, context-aware execution, and phantom instructions}, our compiler provides a practical tool for obfuscation that remains resilient against modern reverse-engineering techniques.
+By leveraging Aporia’s randomized scheduling, context-aware execution, and phantom instructions, our compiler provides a practical tool for obfuscation that remains resilient against modern reverse-engineering techniques.
 
