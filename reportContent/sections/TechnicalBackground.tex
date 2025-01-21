@@ -14,21 +14,22 @@ This is achieved through two key mechanisms:
     \item \textbf{Context-Dependent Execution}: Execution conditions are based on hidden states, preventing static analysis.
 \end{itemize}
 
-\subsection{Security Model and Side-Channel Resistance}
-Aporia’s security model assumes an \textit{adversary capable of both static and dynamic analysis}. However, unlike most obfuscation methods, instruction decorrelation also offers protection against speculative execution attacks (e.g., Spectre, Meltdown) by eliminating direct data dependencies~\cite{ajorian2024aporia}. 
-
-Additionally, the system introduces phantom instructions; instructions that appear valid to an attacker but do not contribute to actual program execution. This makes symbolic execution impractical.
-
 \subsection{The $L_{cfi}$ Language and Its Role in Obfuscation}
-Lcfi (the target language of our compiler) is specifically designed to support instruction decorrelation. It employs:
+$L_{cfi}$ (the input language for Aporia) is specifically designed to support instruction decorrelation. It employs:
 \begin{itemize}
-    \item \textbf{Predicate-based execution}, where each instruction is executed only if a dynamic condition holds.
-    \item \textbf{Phantom instructions}, which introduce noise in the control flow to mislead attackers.
-    \item \textbf{Delayed branching}, which defers the resolution of execution paths, making control flow reconstruction NP-hard~\cite{ajorian2024aporia}.
+    \item \textbf{Predicate-based execution}, where each instruction is executed only if a dynamic condition holds, making control flow reconstruction difficult.
 \end{itemize}
 
-\subsection{Relation to Our Project}
-Our project builds upon Aporia’s work by designing a compiler from $L_{if}$ to $L_{cfi}$, enabling automatic program transformation for obfuscation. The compiler translates a subset of Python ($L_{if}$) into $L_{cfi}$ through multiple intermediate representations, enforcing instruction decorrelation at various stages.
+While $L_{cfi}$ facilitates instruction decorrelation, its design constraints make it challenging to write directly. Developers must handle explicit predicates and low-level constructs, which significantly differ from high-level programming languages like Python.
 
-By leveraging Aporia’s randomized scheduling, context-aware execution, and phantom instructions, our compiler provides a practical tool for obfuscation that remains resilient against modern reverse-engineering techniques.
+\subsection{Relation to Our Project}
+The goal of our project is to create the missing "bridge" between Python and the Aporia framework. Writing code directly in $L_{cfi}$ is impractical due to its low-level nature and strict requirements. Our compiler translates programs written in a subset of Python ($L_{if}$) into $L_{cfi}$. 
+
+This transformation allows developers to:
+\begin{itemize}
+    \item Write secure code in a familiar, high-level syntax.
+    \item Leverage Aporia’s obfuscation techniques without directly interacting with $L_{cfi}$.
+\end{itemize}
+
+By bridging this gap, our project streamlines the workflow for developers, enabling them to write Python-like programs and automatically obtain the obfuscation benefits provided by Aporia.
 
