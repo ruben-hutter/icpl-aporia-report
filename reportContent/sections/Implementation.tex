@@ -2,6 +2,40 @@
 
 \subsection{Overview}
 
+\begin{center}
+  \begin{bnf}[row{-} = {bg = gray9}]
+		cmp ::= != // == // < // <= // > // >=;;
+		bop ::= + // - // * // / // \%;;
+		pred ::= true // false // bool\_var;;
+		bool\_exp ::= pred // (bool\_exp) // !bool\_exp
+		| bool\_exp \&\& bool\_exp
+		| bool\_exp cmp bool\_exp;;
+		num\_exp ::= number // num\_var // (num\_exp) // -num\_exp
+		| num\_exp bop num\_exp;;
+		inst ::= print("string",bool\_exp) // bool\_exp
+		| print("string, num\_exp") // num\_exp
+		| bool\_var $=$ bool\_exp
+		| num\_var $=$ num\_exp;;
+		stmt ::= (\$label)? // pred $\colon$ inst;;
+		declar ::= bool bool\_var$^+$ // int num\_var$^+$ // int float\_var$^+$;;
+		$L_{cfi}$ ::= declar$^*$ stmt$^*$
+	\end{bnf}
+\end{center}
+
+\begin{center}
+  \begin{bnf}[row{-} = {bg = gray9}]
+		cmp ::= != // == // < // <= // > // >=;;
+		exp ::= int // input\_int() // -exp()
+		| exp + exp // exp - exp
+		| (exp) // var
+		| True // False // exp and exp
+		| exp or exp // not exp // exp cmp exp
+		| exp if exp else exp;;
+		stmt ::= print(exp) // exp // var = exp
+		| if exp $\colon$ stmt$^+$ else $\colon$ stmt$^+$;;
+		$L_{if}$ ::= stmt$^+$
+	\end{bnf}
+\end{center}
 TODO
 
 \subsection{First pass: Remove complex operands ($L_{if}^{sc}$)}
@@ -15,4 +49,3 @@ TODO
 \subsection{Third pass: Select instructions ($L_{cif}$)}
 
 TODO
-
