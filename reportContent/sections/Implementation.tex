@@ -106,14 +106,24 @@ If the expression is part of a top level assign, the variable name is given by t
 		| exp and exp // exp or exp 
 		| not exp // exp cmp exp // atm;;
 		stmt ::= print(exp) // exp // var = exp;;
-		if\_stmt ::= if atm$\colon$ stmt$^+$;;
+		if\_stmt ::= if atm$\colon$ stmt;;
 		$L_{flat}$ ::= if\_stmt$^+$;;
 	\end{bnf}
 	\caption{Backus Naur Form Grammar of $L_{flat}$}
-	\label{flat}
+	\label{bnf:flat}
 \end{figure}
 
-\lipsum[2-3]
+The goal of this pass is to eliminate nested \texttt{if} statements, ensuring that all statements are wrapped in top-level \texttt{if} statements in the resulting intermediary language. We call this language $L_{flat}$, which inherits from $L_{sc}$ but restricts all \texttt{if} statements to be top-level only, as described by the BNF in Figure~\ref{bnf:flat}. Consequently, each \texttt{if} statement body now contains exactly one statement, which can not be an \texttt{if} statement, thereby preventing any form of nesting.
+
+The compiler takes an $L_{sc}$ AST as input and produces an $L_{flat}$ AST. Applying this pass to the sample code shown above yields the flattened version in Figure~\ref{code:flat}. Statements that were not originally inside any \texttt{if} are wrapped in an \texttt{if True} statement, while statements that were nested in an \texttt{if} block are guarded by newly introduced boolean variables.
+
+\begin{figure}[h!]
+	\lstinputlisting[language=python]{reportContent/code_examples/2_pres_example.py}
+	\caption{$L_{flat}$ example code}
+	\label{code:flat}
+\end{figure}
+
+When the compiler encounters an \texttt{if} statement nested within another \texttt{if}, it generates a temporary boolean variable holding the conjunction of the outer and inner conditions. The statements in the nested \texttt{if} block are then wrapped in a new \texttt{if} whose predicate is this temporary variable. By repeating this process, we flatten all nested \texttt{if} statements without changing the original program's logical flow.
 
 \subsection{Third pass: Select instructions ($L_{cif}$)}
 
