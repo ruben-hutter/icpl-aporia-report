@@ -60,10 +60,40 @@
 		$L_{sc}$ ::= stmt$^+$;;
 	\end{bnf}
 	\caption{Backus Naur Form Grammar of $L_{sc}$}
-	\label{sc}
+	\label{bnf:sc}
 \end{figure}
 
-\lipsum[2-3]
+The first pass of the compiler lays an important foundation for each of following passes. It simplifies the input program by performing the following four transformations:
+
+\subsubsection{Remove top level expressions that have no effect:}
+Any top level expression like a simple addition \texttt{1 + 2} or a boolean operation \texttt{true and false} is removed from the program.
+This goes against the principle of Aporia, which wants to make the original program as complicated as possible but was necessary to simplify the implementation of the compiler.
+
+\subsubsection{Create variables for complex conditions:}
+The predicates in the statements of $L_{cfi}$ cannot be complex boolean expressions but only variables or the two boolean constants \texttt{true} and \texttt{false}.
+Hence, if the compiler encounters a complex boolean expression as the condition of an if-statement, it creates a new boolean variable and assigns the complex expression to it. 
+The compiler then replaces the complex expression with the new variable as the condition.
+
+\subsubsection{Remove else branches:}
+Each statement in $L_{cfi}$ can only have one branch, so the compiler must remove the else branch of if-statements.
+In order to complete this step, the compiler assigns the negated condition of the if-statement to a new boolean variable.
+This variable is then used as the condition of a second if-statement, which contains the else branch of the original statement as its body.
+
+\subsubsection{Turn if-expressions into if-statements:}
+$L_{cfi}$ does not support if-expressions, so the compiler must transform them into if-statements with empty else branches. This is done in a similar way as in the exercise part of the seminar.
+First, the condition is made atomic and the its negation assigned to a new variable as in the previous steps.
+Then, two if-statements are created, one for the body and one for the orelse branch of the original if-expression.
+Since top level expressions are ignored, the only context that if-expressions can occur in are variable assignments either as an original statement or to atomify a complex condition.
+The result of the if-expression must thus always be assigned to the given variable name as the last statement of the new body in the new if-statement.
+If the expression is part of a top level assign, the variable name is given by the original program. Else, a new variable name is generated.
+
+\begin{figure}[h]
+	\centering
+	\lstinputlisting[language=python]{reportContent/code_examples/1_pres_example.py}
+	\caption{Result after the first pass of example program}
+	\label{code:sc}
+\end{figure}
+
 
 \subsection{Second pass: Flatten and Make everything an if ($L_{if}^{flat}$)}
 \begin{figure}[h!]
