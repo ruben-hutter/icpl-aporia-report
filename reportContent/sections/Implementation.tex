@@ -15,7 +15,7 @@
 		num\_exp ::= number // num\_var // (num\_exp) // -num\_exp
 		| num\_exp bop num\_exp;;
 		inst ::= print("string",bool\_exp) // bool\_exp
-		| print("string, num\_exp") // num\_exp
+		| print("string", num\_exp) // num\_exp
 		| bool\_var $=$ bool\_exp
 		| num\_var $=$ num\_exp;;
 		stmt ::= (\$label)? // pred $\colon$ inst;;
