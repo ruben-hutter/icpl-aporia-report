@@ -113,9 +113,12 @@ If the expression is part of a top level assign, the variable name is given by t
 	\label{bnf:flat}
 \end{figure}
 
-The goal of this pass is to eliminate nested \texttt{if} statements, ensuring that all statements are wrapped in top-level \texttt{if} statements in the resulting intermediary language. We call this language $L_{flat}$, which inherits from $L_{sc}$ but restricts all \texttt{if} statements to be top-level only, as described by the BNF in Figure~\ref{bnf:flat}. Consequently, each \texttt{if} statement body now contains exactly one statement, which can not be an \texttt{if} statement, thereby preventing any form of nesting.
+The goal of this pass is to eliminate nested \texttt{if} statements, ensuring that all statements are wrapped in top-level \texttt{if} statements in the resulting intermediary language. We call this language $L_{flat}$, which inherits from $L_{sc}$ but restricts all \texttt{if} statements to be top-level only, as described by the BNF in Figure~\ref{bnf:flat}. Consequently, each \texttt{if} statement body now contains exactly one statement, which can not be an \texttt{if} statement, thereby preventing any form of nesting. The compiler takes an $L_{sc}$ AST as input and produces an $L_{flat}$ AST. Applying this pass to the sample code shown in Figure \ref{code:sc} yields the flattened version in Figure~\ref{code:flat}. The compiler of this pass makes the following transformations:
 
-The compiler takes an $L_{sc}$ AST as input and produces an $L_{flat}$ AST. Applying this pass to the sample code shown above yields the flattened version in Figure~\ref{code:flat}. Statements that were not originally inside any \texttt{if} are wrapped in an \texttt{if True} statement, while statements that were nested in an \texttt{if} block are guarded by newly introduced boolean variables.
+\subsubsection{Wrap statements not originally in an if-block with if True:} Any statement at the top level (i.e., not in an \texttt{if}) is enclosed in an \texttt{if True} block. This step ensures that every statement in the resulting code is preceded by \texttt{if}. We can see that lines 1-2 in Figure \ref{code:sc} transform to lines 3-4 in Figure \ref{code:flat}.
+
+\subsubsection{Flatten nested if statements:}
+When the compiler encounters an \texttt{if} statement nested within another \texttt{if}, it creates a temporary boolean variable that stores the conjunction of the outer and inner conditions. In Figure~\ref{code:sc}, for example, the nested \texttt{if} on line 7 is transformed into the conjunction on line 12 in Figure~\ref{code:flat}. The statements within the nested \texttt{if} block are then placed in a new \texttt{if} statement whose predicate is this temporary variable, as shown on lines 13–14 in Figure~\ref{code:flat}. By applying this process repeatedly, the compiler flattens all nested \texttt{if} statements without altering the program’s logical flow.
 
 \begin{figure}[h!]
 	\lstinputlisting[language=python]{reportContent/code_examples/2_pres_example.py}
@@ -123,7 +126,6 @@ The compiler takes an $L_{sc}$ AST as input and produces an $L_{flat}$ AST. Appl
 	\label{code:flat}
 \end{figure}
 
-When the compiler encounters an \texttt{if} statement nested within another \texttt{if}, it generates a temporary boolean variable holding the conjunction of the outer and inner conditions. The statements in the nested \texttt{if} block are then wrapped in a new \texttt{if} whose predicate is this temporary variable. By repeating this process, we flatten all nested \texttt{if} statements without changing the original program's logical flow.
 
 \subsection{Third pass: Select instructions ($L_{cif}$)}
 
