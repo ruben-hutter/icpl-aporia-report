@@ -12,18 +12,19 @@
 % Required for turning proceedings on and off
 % (Source: http://tex.stackexchange.com/questions/87656/turning-parts-of-text-on-and-off)
 \usepackage{etoolbox}
+\usepackage{simplebnf}
 
 \usepackage{makeidx}
 %\usepackage{chapterbib}
 
-%% It provides the internationalization of LaTeX. 
+%% It provides the internationalization of LaTeX.
 %It has to be loaded in any document, and you have to give as an option the main language you are going to use in the document.
 \usepackage[ngerman,english]{babel}
 \selectlanguage{english}
 
-%% choose the encoding of the input text. 
+%% choose the encoding of the input text.
 \usepackage[utf8]{inputenc}
-% To choose the font encoding of the output text. 
+% To choose the font encoding of the output text.
 \usepackage[T1]{fontenc}
 
 % =======================================================================================
@@ -33,11 +34,10 @@
 % === (Otherwise we will not be able to generate proceedings for the course...)       ===
 % =======================================================================================
 
-
 %% Packages for Bibliography
 \usepackage{csquotes}
 % Recommended for biblatex
-\usepackage{xpatch} 
+\usepackage{xpatch}
 % pdflatex -> biber -> pdflatex (2x)
 \usepackage[backend=biber,style=numeric,language=english]{biblatex}
 
@@ -47,15 +47,13 @@
 \usepackage{enumitem}
 \renewcommand\labelitemi{--}
 
-
 %% Float Elements
 \usepackage{float}
 % Adds Float \FloatBarrier beyond which floats may not pass
 \usepackage[section]{placeins}
 
-
 %% Images
-% Allows you to insert graphic files within a document. 
+% Allows you to insert graphic files within a document.
 % Zum Laden von Grafiken
 \usepackage{graphicx}
 \usepackage[justification=centerlast, font=small]{caption}
@@ -67,7 +65,7 @@
 \usepackage{tabularx}
 \usepackage{booktabs}
 % For Tables longer than one Page
-\usepackage{longtable} 
+\usepackage{longtable}
 \usepackage{multirow}
 \usepackage{makecell, boldline}
 
@@ -79,26 +77,23 @@
 \usepackage{amssymb}
 \usepackage{xfrac}
 
-
 % For Algorithms
 \usepackage{algorithmic}
 \usepackage{algorithm}
 
 % Plain code printing
-\usepackage{listings} 
+\usepackage{listings}
 \usepackage{verbatim}
 
 %% For Colors (\textcolor etc.)
 \usepackage{color}
 \usepackage{xcolor}
 
-
 % For Tikz
 \usepackage{tikz}
 %% A library providing ER prefabs
 \usetikzlibrary{er}
 \usetikzlibrary{positioning,arrows.meta}
-
 
 %% References
 % For URLs
@@ -126,11 +121,10 @@ urlcolor=black
 \usepackage{lipsum}
 % Support for setting the spacing between lines
 \usepackage{setspace}
-% For Todo Notes 
+% For Todo Notes
 \usepackage[colorinlistoftodos]{todonotes}
 % For curly underline
 \usepackage[normalem]{ulem}
-
 
 \makeatletter
 \newcommand{\@chapapp}{\relax}
@@ -154,7 +148,6 @@ urlcolor=black
 % \lstset{inputpath=proceedings/gruppe-2/images/}
 % \lstset{inputpath=images/}
 
-
 %
 %
 % procedureProceedings : boolean
@@ -169,9 +162,7 @@ urlcolor=black
 %
 \setbool{produceProceedings}{false}
 
-
 \ifbool{produceProceedings}{
-
 
 %
 %
@@ -186,10 +177,7 @@ urlcolor=black
 %
 \setbool{produceProceedingsBookVersion}{false}
 
-
-
 }{\AtBeginEnvironment{produceProceedings}{\comment}\AtEndEnvironment{produceProceedings}{\endcomment}}
-
 
 %
 %
@@ -200,7 +188,6 @@ urlcolor=black
 %
 \newcommand{\coursename}{Interpretation and Compilation of Programming Languages}
 
-
 %
 %
 % courseacronym : String
@@ -209,7 +196,6 @@ urlcolor=black
 % Acronym of the course (e.g., DIS for Distributed Information Systems, or CS244 for Databases).
 %
 \newcommand{\courseacronym}{ICPL}
-
 
 %
 %
@@ -220,16 +206,14 @@ urlcolor=black
 %
 \newcommand{\semester}{autumn semester 2024}
 
-
 %
 %
 % Semester : String
 % =========================
 %
 % The semester with startring capital letters.
-% 
+%
 \newcommand{\Semester}{Autumn Semester 2024}
-
 
 %
 %
@@ -268,7 +252,6 @@ urlcolor=black
         \end{refsection}
     }
 
-
 %
 %
 % rootDocument : String
@@ -278,7 +261,6 @@ urlcolor=black
 %
 \newcommand{\rootDocument}{proceedings.tex}
 \newcommand{\rootName}{proceedings}
-
 
 \ifbool{produceProceedings}
 {
@@ -291,72 +273,69 @@ urlcolor=black
     \graphicspath{{images/}{reportContent/images/}}
 }
 
-
-
 \begin{document}
-	
+
 \begin{produceProceedings}
-	
+
 	\begin{titlepage}
 		\includegraphics{UniBas_Logo_EN_Schwarz_RGB_65}
-		
+
 		\vspace{80pt}
-		
+
 		\centering
-		
+
 		\begin{spacing}{2.8}
-		{\Huge \fontfamily{phv} \bfseries Proceedings of the \coursename\ (\courseacronym)}
+			{\Huge \fontfamily{phv} \bfseries Proceedings of the \coursename\ (\courseacronym)}
 		\end{spacing}
-		
+
 		\vspace{25pt}
-		
+
 		{\large \proceedingsSubtitle}
-		
+
 		\vspace{50pt}
-		
+
 		{\large \Semester}
-		
+
 		\vspace{50pt}
-		
+
 		{\large	Department of Mathematics and Computer Science}
-		
+
 		\vspace{5pt}
-		
+
 		{\large Faculty of Science}
-		
+
 		\vspace{25pt}
-		
+
 		{\large	University of Basel}
 	\end{titlepage}
-	
+
 	\ifbool{produceProceedingsBookVersion}{\frontmatter}{}
-	
+
 	\pagestyle{headings}
 	\addtocmark{Reports}
 	%
 	\chapter*{Preface}
 	This documents contains all student reports of the \coursename\ seminar (\courseacronym) held at the University of Basel in the \semester.
-    The content of the reports are as submitted by the students, only title and authors were sometimes adjusted for consistency.
+	The content of the reports are as submitted by the students, only title and authors were sometimes adjusted for consistency.
 	%
 	\chapter*{Organization}
 	The \coursename\ (\courseacronym) seminar of the \semester\ is organized by the Computer Networks Group, Department of Mathematics and Computer Science, University of Basel.
 	%
 	\section*{Lecturer}
-    Dr. Erick Lavoie (erick.lavoie@unibas.ch)
-    Ali Ajorian (ali.ajorian@unibas.ch)
+	Dr. Erick Lavoie (erick.lavoie@unibas.ch)
+	Ali Ajorian (ali.ajorian@unibas.ch)
 	%
 	\tableofcontents
 \end{produceProceedings}
-	
+
 %
 \mainmatter
 %
 
-
 \ifbool{produceProceedings}{
-    \input{main.tex}
+	\input{main.tex}
 }{
-    \import{reportContent/}{reportContent.tex}
+	\import{reportContent/}{reportContent.tex}
 }
 \end{document}
 
