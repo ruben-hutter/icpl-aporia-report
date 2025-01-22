@@ -1,0 +1,13 @@
+int a, b
+bool pred_1, pred_3, pred_2, pred_5, pred_0, pred_4
+true: a = 3
+true: pred_0 = a > 0
+true: pred_1 = !pred_0
+pred_0: pred_2 = a > 2
+pred_0: pred_3 = !pred_2
+true: pred_4 = pred_0 && pred_2
+pred_4: b = 1
+true: pred_5 = pred_0 && pred_3
+pred_5: b = 0
+pred_0: print("", b)
+pred_1: print("", 2)
