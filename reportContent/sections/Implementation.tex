@@ -157,3 +157,20 @@ This task involves translating each Python AST object into an equivalent $L_{cfi
 	\label{code:lcfi}
 \end{figure}
 
+\subsection{Testing Programs}
+
+The task of a compiler is to translate a source language into a target language such that the behavior of the interpreted source language matches that of the interpreted compiled language. To test our compiler, we verified whether the output of the Python-interpreted source file was equal to the output of the compiled result interpreted by Aporia.
+\\
+
+We developed a command-line utility called \texttt{team\_run\_tests.py}, which takes a Python file and a pass number as input. The utility compiles the Python file incrementally, executing each pass until the specified pass number is reached. The results of the first two passes are interpreted using Python, while the final pass is interpreted by Aporia, which utilizes a binary called \texttt{spp}. For each pass, the utility checks whether the output of the interpreted source file matches the output of the interpreted compiled file. If the outputs are identical, it prints \texttt{SUCCESS}.
+\\
+
+Additionally, the utility offers the following options:
+\begin{itemize}
+	\item \texttt{--trace}: Prints the compiled source code for each pass.
+	\item \texttt{--ast}: Prints the Abstract Syntax Tree (AST) for each pass.
+\end{itemize}
+\\
+
+To integrate the \texttt{spp} binary provided by the Aporia project, we implemented a Python wrapper, as Aporia is written in C++. This process required writing a CMake build file for Aporia. The wrapper automates the execution of \texttt{cmake} and \texttt{make} to build the \texttt{spp} binary. It accepts $L_{cfi}$ source code as a string, writes it to a temporary file, and feeds this file into \texttt{spp}. The wrapper redirects \texttt{stdout} to capture the interpreted result, which is then returned to the caller. Consequently, the wrapper serves as a Python interface for interacting with \texttt{spp}.
+
