@@ -141,6 +141,19 @@ When the compiler encounters an \texttt{if} statement nested within another \tex
 \end{figure}
 
 
-\subsection{Third pass: Select instructions ($L_{cif}$)}
+\subsection{Third pass: Select instructions ($L_{cfi}$)}
 
-\lipsum[2-3]
+In this final stage, we compile $L_{flat}$ to $L_{cfi}$. The Backus-Naur Form (BNF) grammar of $L_{cfi}$ is presented in Figure~\ref{bnf:lcfi}, while the final compiled $L_{cfi}$ source code is shown in Figure~\ref{code:lcfi}. Since the abstract syntax of $L_{flat}$ closely resembles that of $L_{cfi}$, the primary task is to establish a one-to-one mapping for each syntax element. A notable difference between the two languages is that in $L_{cfi}$, the type of each variable must be explicitly declared in advance, similar to C-like languages. The responsibilities of this compiler include the following:
+
+\subsubsection{Determine the Types of All Variables}
+The source language $L_{if}$ supports only boolean and integer variables. Therefore, the compiler's task is limited to distinguishing between these two types. Each time the compiler encounters an assignment, it deduces the type of the right-hand side expression. Based on this deduction, it categorizes the left-hand side variable into either an integer set or a boolean set. Once all variable types have been identified, the compiler inserts their declarations at the beginning of the program, adhering to the $L_{cfi}$ syntax. These declarations can be observed in lines 1–2 of Figure~\ref{code:lcfi}.
+
+\subsubsection{Translate Abstract Syntax Tree (AST) Objects}
+This task involves translating each Python AST object into an equivalent $L_{cfi}$ AST object. The process is relatively straightforward, requiring a mapping of Python AST objects to corresponding $L_{cfi}$ objects. In most cases, the $L_{cfi}$ objects have the same arguments as their Python counterparts. However, an important distinction lies in the concrete syntax representation, as the string representations of the objects differ.
+
+\begin{figure}[h!]
+	\lstinputlisting{reportContent/code_examples/3_pres_example.spp}
+	\caption{$L_{flat}$ example code}
+	\label{code:lcfi}
+\end{figure}
+
