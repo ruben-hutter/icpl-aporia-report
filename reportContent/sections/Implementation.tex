@@ -1,12 +1,35 @@
 \section{Implementation}
 
+\begin{figure}[h!]
+	\centering
+	\begin{tikzpicture}[
+		every node/.style={font=\sffamily},
+		->, thick, shorten >=1pt, shorten <=1pt,
+		arrow/.style={draw, -{Triangle[angle=45:5pt]}},
+		label/.style={midway, font=\sffamily\footnotesize}
+	]
+	
+	% Nodes
+	\node (Lif) at (0, 0) {$\mathcal{L}_{\text{if}}$};
+	\node (Lifsc) at (3, 0) {$\mathcal{L}_{\text{if}}^{\text{sc}}$};
+	\node (Lifflat) at (0, -3) {$\mathcal{L}_{\text{if}}^{\text{flat}}$};
+	\node (Lcfi) at (3, -3) {$\mathcal{L}_{\text{cfi}}$};
+	
+	% Arrows
+	\draw[arrow] (Lif) to[bend left=20] node[label, above] {remove\_complex\_operands} (Lifsc);
+	\draw[arrow] (Lifsc) to[bend left=20] node[label, right] {flatten\_and\_make\_everything\_an\_if} (Lifflat);
+	\draw[arrow] (Lifflat) to[bend right=20] node[label, below] {select\_instructions} (Lcfi);
+	\end{tikzpicture}
+	\caption{Diagram of the compilation passes}
+\end{figure}
+
 \subsection{Overview}
 This chapter goes over all of the compilation steps that were implemented to transform the input language $L_{if}$ into the output language $L_{cfi}$. 
 The respective grammars of both languages are shown in Figure~\ref{bnf:lif} and Figure~\ref{bnf:lcfi}.
 The compiler is implemented in Python and consists of three passes, each of which is responsible for specific transformations.
 The following sections describe each pass in detail and show the transformations that are applied to the input program using the example program from Figure~\ref{code:lif}.
 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\begin{bnf}[row{-} = {bg = gray9}]
 		cmp ::= != // == // < // <= // > // >=;;
@@ -24,7 +47,7 @@ The following sections describe each pass in detail and show the transformations
 	\label{bnf:lif}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\begin{bnf}[row{-} = {bg = gray9}]
 		cmp ::= != // == // < // <= // > // >=;;
@@ -47,7 +70,7 @@ The following sections describe each pass in detail and show the transformations
 	\label{bnf:lcfi}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[h!]
 	\centering
 	\lstinputlisting[language=python]{reportContent/code_examples/0_pres_example.py}
 	\caption{$L_{if}$ Example Program Before Compilation}
