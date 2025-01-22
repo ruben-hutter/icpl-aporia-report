@@ -1,6 +1,7 @@
 \section{Implementation}
 
 \subsection{Overview}
+\lipsum[1]
 
 \begin{figure}[h]
 	\centering
@@ -29,7 +30,7 @@
 	\centering
 	\begin{bnf}[row{-} = {bg = gray9}]
 		cmp ::= != // == // < // <= // > // >=;;
-		exp ::= int // input\_int() // -exp()
+		exp ::= int // input\_int() // -exp
 		| exp + exp // exp - exp
 		| (exp) // var
 		| True // False // exp and exp
@@ -42,16 +43,48 @@
 	\caption{Backus Naur Form Grammar of $L_{if}$}
 	\label{lif}
 \end{figure}
-TODO
 
 \subsection{First pass: Remove complex operands ($L_{if}^{sc}$)}
 
-TODO
+\begin{figure}[h!]
+	\centering
+	\begin{bnf}[row{-} = {bg = gray9}]
+		cmp ::= != // == // < // <= // > // >=;;
+		atm ::= True // False // var;;
+		exp ::= int  // -exp // exp + exp 
+		| exp - exp // (exp)
+		| exp and exp // exp or exp 
+		| not exp // exp cmp exp // atm;;
+		stmt ::= print(exp) // exp // var = exp
+		| if atm$\colon$ stmt$^+$;;
+		$L_{sc}$ ::= stmt$^+$;;
+	\end{bnf}
+	\caption{Backus Naur Form Grammar of $L_{sc}$}
+	\label{sc}
+\end{figure}
+
+\lipsum[2-3]
 
 \subsection{Second pass: Flatten and Make everything an if ($L_{if}^{flat}$)}
+\begin{figure}[h!]
+	\centering
+	\begin{bnf}[row{-} = {bg = gray9}]
+		cmp ::= != // == // < // <= // > // >=;;
+		atm ::= True // False // var;;
+		exp ::= int  // -exp // exp + exp 
+		| exp - exp // (exp)
+		| exp and exp // exp or exp 
+		| not exp // exp cmp exp // atm;;
+		stmt ::= print(exp) // exp // var = exp;;
+		if\_stmt ::= if atm$\colon$ stmt$^+$;;
+		$L_{flat}$ ::= if\_stmt$^+$;;
+	\end{bnf}
+	\caption{Backus Naur Form Grammar of $L_{flat}$}
+	\label{flat}
+\end{figure}
 
-TODO
+\lipsum[2-3]
 
 \subsection{Third pass: Select instructions ($L_{cif}$)}
 
-TODO
+\lipsum[2-3]
