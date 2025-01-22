@@ -1,3 +1,19 @@
 \section{Evaluation}
 
-In this section, we will evaluate the project and the results. We will discuss the project's objectives, the implementation, and the results. We will also discuss the project's limitations and possible improvements.
+In this section, we will evaluate the project and the results. We will discuss the project's objectives, the implementation, and the results. We will also discuss the project's limitations and possible improvements that could be added in the future.
+
+\subsection{Objectives}
+The goal of this project was to implement a working compiler that translates the Python subset $L_{if}$ to $L_{cfi}$ allowing programs written in $L_{if}$ to be executed by the Aporia interpreter and thus used for interleaving with other programs.
+
+\subsection{Implementation}
+To achieve the goal, the compiler was implemented in a step-wise approach as was introduced during the course of the lecture. These passes were created from scratch via trial and error. The compiler was implemented in Python and uses the \texttt{ast} module to parse the input program. To ensure that it works correctly, the compiler was tested with a variety of programs until it was able to compile all test programs and produce the expected output behaviour after they were interpreted.
+
+\subsection{Results}
+The compiler was able to successfully compile all test programs and produce the expected output behaviour after they were interpreted. There is no formal proof that the compiler is mathematically correct, but the extensive testing of the compiler with a variety of programs gives us great confidence that it is working as intended.
+
+\subsection{Limitations}
+The compiler is limited to the subset of Python $L_{if}$ and does not support the full Python language. This means that the compiler is not able to compile all Python programs, only those that are written in the subset $L_{if}$.
+The compilation of the full Python language would at the moment not be possible because $L_{cfi}$ is not (yet) turing complete. Hence, there are some Python programs that cannot be compiled to $L_{cfi}$.
+
+\subsection{Possible Improvements}
+As mentioned in the previous section, the compiler does not support the full Python language. One possible improvement would be to extend the compiler to support more features of the Python language like loops or functions. This could be done by adding more passes to the compiler that translate more features of Python to $L_{cfi}$. In some cases, however, this might require extending $L_{cfi}$ to make it more expressive.
