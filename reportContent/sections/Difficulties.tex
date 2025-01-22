@@ -4,15 +4,12 @@ In this chapter, we will discuss the difficulties we encountered during the cour
 \subsection{Compiler Passes}
 In the initial project presentation, our conceptual implementation of the compiler consisted of four passes, the additional pass being the separation of the "Flatten and Make everything an if" pass from subsection~\ref{subsec:flatten}. This approach would have allowed the body of an if-statement to contain more than one statement after the "flatten" pass before creating an if for each statement in "make everything an if". However, this lead to the challenge of having to figure out when a new if-statement for the same condition should be created and when the body of the current if-statement should be extended. Therefore, we decided to merge the two passes into one, thus simplifying the implementation.
 
-\subsection{Aporia Wrapper}
-%TODO Ephraim
-
 \subsection{Building Aporia Interpreter}
-The Aporia interpreter provided by Ali was written in C++ and had to be compiled before it could be used. On both Linux and Windows there were issues with the compilation process. On Linux, there were some missing libraries while on Windows, the file extensions were different making it difficult to use the wrapper for testing. The problems were resolved on Linux by adding the necessary libraries to the files where they were needed. On Windows, the fix was to use WSL and use the same approach as on Linux.
+The Aporia interpreter provided by Ali Ajoran was written in C++ and had to be compiled before it could be used. Since there were no instructions on how to build the executable, we had to figure this out with Ali and write a CMake file. We still had issues since on both Linux and Windows there were issues with the compilation process. On Linux, there were some missing libraries while on Windows, the file extensions were different making it difficult to use the wrapper for testing. The problems were resolved on Linux by installing the necessary libraries and adding them to the files where they were needed. On Windows, the fix was to use WSL and use the same approach as on Linux.
 
 \subsection{Aporia Interpreter behaviour}
-While testing our compiler, we encountered some problems and unexpected behaviour of the Aporia Interpreter.
-In print statements, the interpreter added a trailing space to each output, which was not present in the original program. This caused the output of our compiled program to differ from the expected output.
+While testing our compiler, we encountered some problems and unexpected behaviour of the Aporia Interpreter. The Aporia interpreter always printed log statements alongside the actual output of the interpreted file, with no option to disable them.. This made it difficult to compare the Python interpreted result to the one provided by Aporia.
+Additionaly, in print statements, the interpreter added a trailing space to each output, which was not present in the original program. This caused the output of our compiled program to differ from the expected output.
 Another issue was that the interpreter did not support running empty \texttt{.spp} files, which caused the interpreter to crash when trying to do so.
 Lastly, the interpreter had an issue that lead to the example given in Figure~\ref{code:aporia_issue} to output 1 even though the expected output was 0.
 Luckily, all these issues were quickly resolved by Ali, and we could continue testing our compiler.
