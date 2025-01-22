@@ -1,3 +1,4 @@
+\newpage
 \section{Implementation}
 
 \begin{figure}[h!]
@@ -26,8 +27,9 @@
 \subsection{Overview}
 This chapter goes over all of the compilation steps that were implemented to transform the input language $L_{if}$ into the output language $L_{cfi}$. 
 The respective grammars of both languages are shown in Figure~\ref{bnf:lif} and Figure~\ref{bnf:lcfi}.
+There is an additional constraint on $L_{if}$ because $L_{cfi}$ does not support the function \texttt{input\_int()}. This means that in all steps, this function can be ignored.
 The compiler is implemented in Python and consists of three passes, each of which is responsible for specific transformations.
-The following sections describe each pass in detail and show the transformations that are applied to the input program using the example program from Figure~\ref{code:lif}.
+The following sections describe each pass in detail and show the transformations that are applied to the input program using the example program from Figure~\ref{code:lif}. To compile an $L_{if}$ program to $L_{cfi}$, the command line utility \texttt{compiler.py} can be used.
 
 \begin{figure}[h!]
 	\centering
@@ -80,7 +82,7 @@ The following sections describe each pass in detail and show the transformations
 \subsection{First pass: Remove complex operands ($L_{if}^{sc}$)}
 
 
-The first pass of the compiler lays an important foundation for each of following passes. It takes the $L_{if}$ AST of the original program as input and performins the following four transformations leading to the intermediary language $L_{if}^{sc}$ and its corresponding AST as output:
+The first pass of the compiler takes the $L_{if}$ AST of the original program as input and performs the following four transformations leading to the intermediary language $L_{if}^{sc}$ (see Backus-Naur Form (BNF) grammar in Figure~\ref{bnf:sc}) and its corresponding AST as output:
 
 \begin{figure}[h!]
 	\centering
@@ -91,11 +93,11 @@ The first pass of the compiler lays an important foundation for each of followin
 		| exp - exp // (exp)
 		| exp and exp // exp or exp 
 		| not exp // exp cmp exp // atm;;
-		stmt ::= print(exp) // exp // var = exp
+		stmt ::= print(exp) // var = exp
 		| if atm$\colon$ stmt$^+$;;
-		$L_{sc}$ ::= stmt$^+$;;
+		$L_{if}^{sc}$ ::= stmt$^+$;;
 	\end{bnf}
-	\caption{Backus Naur Form Grammar of $L_{sc}$}
+	\caption{Backus Naur Form Grammar of $L_{if}^{sc}$}
 	\label{bnf:sc}
 \end{figure}
 
@@ -110,7 +112,7 @@ The compiler then replaces the complex expression with the new variable as the c
 This transformation can be seen on lines 2 and 4 in Figure~\ref{code:sc}.
 
 \subsubsection{Remove else branches:}
-Each statement in $L_{cfi}$ can only have one branch, so the compiler must remove the else branch of if-statements.
+Each if-statement in $L_{if}^{sc}$ can only have one branch, so the compiler must remove the else branch.
 In order to complete this step, the compiler assigns the negated condition of the if-statement to a new boolean variable.
 This variable is then used as the condition of a second if-statement, which contains the else branch of the original statement as its body.
 On line 3 of Figure~\ref{code:sc}, the assignment of the negation of the original condition can be seen which is then used as the condition on line 12 for the new if-statement representing the else branch of the original program.
@@ -142,15 +144,15 @@ The whole transformation of an if-expression are shown in lines 5-10 of Figure~\
 		| exp - exp // (exp)
 		| exp and exp // exp or exp 
 		| not exp // exp cmp exp // atm;;
-		stmt ::= print(exp) // exp // var = exp;;
+		stmt ::= print(exp) // var = exp;;
 		if\_stmt ::= if atm$\colon$ stmt;;
-		$L_{flat}$ ::= if\_stmt$^+$;;
+		$L_{if}^{flat}$ ::= if\_stmt$^+$;;
 	\end{bnf}
-	\caption{Backus Naur Form Grammar of $L_{flat}$}
+	\caption{Backus Naur Form Grammar of $L_{if}^{flat}$}
 	\label{bnf:flat}
 \end{figure}
 
-The goal of this pass is to eliminate nested \texttt{if} statements, ensuring that all statements are wrapped in top-level \texttt{if} statements in the resulting intermediary language. We call this language $L_{flat}$, which inherits from $L_{sc}$ but restricts all \texttt{if} statements to be top-level only, as described by the BNF in Figure~\ref{bnf:flat}. Consequently, each \texttt{if} statement body now contains exactly one statement, which can not be an \texttt{if} statement, thereby preventing any form of nesting. The compiler takes an $L_{sc}$ AST as input and produces an $L_{flat}$ AST. Applying this pass to the sample code shown in Figure \ref{code:sc} yields the flattened version in Figure~\ref{code:flat}. The compiler of this pass makes the following transformations:
+The goal of this pass is to eliminate nested \texttt{if} statements, ensuring that all statements are wrapped in top-level \texttt{if} statements in the resulting intermediary language. We call this language $L_{if}^{flat}$, which inherits from $L_{if}^{sc}$ but restricts all \texttt{if} statements to be top-level only, as described by the BNF in Figure~\ref{bnf:flat}. Consequently, each \texttt{if} statement body now contains exactly one statement, which can not be an \texttt{if} statement, thereby preventing any form of nesting. The compiler takes an $L_{if}^{sc}$ AST as input and produces an $L_{if}^{flat}$ AST. Applying this pass to the sample code shown in Figure \ref{code:sc} yields the flattened version in Figure~\ref{code:flat}. The compiler of this pass makes the following transformations:
 
 \subsubsection{Wrap every top level statement with if True} Any statement at the top level (i.e., not in an \texttt{if}) is enclosed in an \texttt{if True} block. This step ensures that every statement in the resulting code is preceded by \texttt{if}. We can see that lines 1-2 in Figure \ref{code:sc} transform to lines 3-4 in Figure \ref{code:flat}.
 
@@ -159,14 +161,14 @@ When the compiler encounters an \texttt{if} statement nested within another \tex
 
 \begin{figure}[h!]
 	\lstinputlisting[language=python]{reportContent/code_examples/2_pres_example.py}
-	\caption{$L_{flat}$ After the Second Pass of Example Program}
+	\caption{$L_{if}^{flat}$ After the Second Pass of Example Program}
 	\label{code:flat}
 \end{figure}
 
 
 \subsection{Third pass: Select instructions ($L_{cfi}$)}
 
-In this final stage, we compile $L_{flat}$ to $L_{cfi}$. The Backus-Naur Form (BNF) grammar of $L_{cfi}$ is presented in Figure~\ref{bnf:lcfi}, while the final compiled $L_{cfi}$ source code is shown in Figure~\ref{code:lcfi}. Since the abstract syntax of $L_{flat}$ closely resembles that of $L_{cfi}$, the primary task is to establish a one-to-one mapping for each syntax element. A notable difference between the two languages is that in $L_{cfi}$, the type of each variable must be explicitly declared in advance, similar to C-like languages. The responsibilities of this compiler include the following:
+In this final stage, we compile $L_{if}^{flat}$ to $L_{cfi}$. The BNF grammar of $L_{cfi}$ is presented in Figure~\ref{bnf:lcfi}, while the final compiled $L_{cfi}$ source code is shown in Figure~\ref{code:lcfi}. Since the abstract syntax of $L_{if}^{flat}$ closely resembles that of $L_{cfi}$, the primary task is to establish a one-to-one mapping for each syntax element. A notable difference between the two languages is that in $L_{cfi}$, the type of each variable must be explicitly declared in advance, similar to C-like languages. The responsibilities of this compiler include the following:
 
 \subsubsection{Determine the Types of All Variables}
 The source language $L_{if}$ supports only boolean and integer variables. Therefore, the compiler's task is limited to distinguishing between these two types. Each time the compiler encounters an assignment, it deduces the type of the right-hand side expression. Based on this deduction, it categorizes the left-hand side variable into either an integer set or a boolean set. Once all variable types have been identified, the compiler inserts their declarations at the beginning of the program, adhering to the $L_{cfi}$ syntax. These declarations can be observed in lines 1–2 of Figure~\ref{code:lcfi}.
@@ -184,7 +186,7 @@ This task involves translating each Python AST object into an equivalent $L_{cfi
 
 The task of a compiler is to translate a source language into a target language such that the behavior of the interpreted source language matches that of the interpreted compiled language. To test our compiler, we verified whether the output of the Python-interpreted source file was equal to the output of the compiled result interpreted by Aporia.
 
-We developed a command-line utility called \texttt{team\_run\_tests.py}, which takes a Python file and a pass number as input. The utility compiles the Python file incrementally, executing each pass until the specified pass number is reached. The results of the first two passes are interpreted using Python, while the final pass is interpreted by Aporia, which utilizes a binary called \texttt{spp}. For each pass, the utility checks whether the output of the interpreted source file matches the output of the interpreted compiled file. If the outputs are identical, it prints \texttt{SUCCESS}.
+We developed a command-line utility called \texttt{team2\_run\_tests.py}, which takes a Python file and a pass number as input. The utility compiles the Python file incrementally, executing each pass until the specified pass number is reached. The results of the first two passes are interpreted using Python, while the final pass is interpreted by Aporia, which utilizes a binary called \texttt{spp}. For each pass, the utility checks whether the output of the interpreted source file matches the output of the interpreted compiled file. If the outputs are identical, it prints \texttt{SUCCESS}.
 
 Additionally, the utility offers the following options:
 \begin{itemize}
