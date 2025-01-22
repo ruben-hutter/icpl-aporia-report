@@ -183,10 +183,8 @@ This task involves translating each Python AST object into an equivalent $L_{cfi
 \subsection{Testing Programs}
 
 The task of a compiler is to translate a source language into a target language such that the behavior of the interpreted source language matches that of the interpreted compiled language. To test our compiler, we verified whether the output of the Python-interpreted source file was equal to the output of the compiled result interpreted by Aporia.
-\\
 
 We developed a command-line utility called \texttt{team\_run\_tests.py}, which takes a Python file and a pass number as input. The utility compiles the Python file incrementally, executing each pass until the specified pass number is reached. The results of the first two passes are interpreted using Python, while the final pass is interpreted by Aporia, which utilizes a binary called \texttt{spp}. For each pass, the utility checks whether the output of the interpreted source file matches the output of the interpreted compiled file. If the outputs are identical, it prints \texttt{SUCCESS}.
-\\
 
 Additionally, the utility offers the following options:
 \begin{itemize}
