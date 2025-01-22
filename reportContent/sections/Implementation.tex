@@ -190,10 +190,9 @@ We developed a command-line utility called \texttt{team\_run\_tests.py}, which t
 
 Additionally, the utility offers the following options:
 \begin{itemize}
-	\item \texttt{--trace}: Prints the compiled source code for each pass.
-	\item \texttt{--ast}: Prints the Abstract Syntax Tree (AST) for each pass.
+	\item \texttt{-{}-trace}: Prints the compiled source code for each pass.
+	\item \texttt{-{}-ast}: Prints the Abstract Syntax Tree (AST) for each pass.
 \end{itemize}
-\\
 
 To integrate the \texttt{spp} binary provided by the Aporia project, we implemented a Python wrapper, as Aporia is written in C++. This process required writing a CMake build file for Aporia. The wrapper automates the execution of \texttt{cmake} and \texttt{make} to build the \texttt{spp} binary. It accepts $L_{cfi}$ source code as a string, writes it to a temporary file, and feeds this file into \texttt{spp}. The wrapper redirects \texttt{stdout} to capture the interpreted result, which is then returned to the caller. Consequently, the wrapper serves as a Python interface for interacting with \texttt{spp}.
 
