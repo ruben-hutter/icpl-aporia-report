@@ -2,8 +2,9 @@
 
 \subsection{Overview}
 
-\begin{center}
-  \begin{bnf}[row{-} = {bg = gray9}]
+\begin{figure}[h]
+	\centering
+	\begin{bnf}[row{-} = {bg = gray9}]
 		cmp ::= != // == // < // <= // > // >=;;
 		bop ::= + // - // * // / // \%;;
 		pred ::= true // false // bool\_var;;
@@ -20,10 +21,13 @@
 		declar ::= bool bool\_var$^+$ // int num\_var$^+$ // int float\_var$^+$;;
 		$L_{cfi}$ ::= declar$^*$ stmt$^*$
 	\end{bnf}
-\end{center}
+	\caption{Backus Naur Form Grammar of $L_{cfi}$}
+	\label{lcfi}
+\end{figure}
 
-\begin{center}
-  \begin{bnf}[row{-} = {bg = gray9}]
+\begin{figure}[h]
+	\centering
+	\begin{bnf}[row{-} = {bg = gray9}]
 		cmp ::= != // == // < // <= // > // >=;;
 		exp ::= int // input\_int() // -exp()
 		| exp + exp // exp - exp
@@ -35,7 +39,9 @@
 		| if exp $\colon$ stmt$^+$ else $\colon$ stmt$^+$;;
 		$L_{if}$ ::= stmt$^+$
 	\end{bnf}
-\end{center}
+	\caption{Backus Naur Form Grammar of $L_{if}$}
+	\label{lif}
+\end{figure}
 TODO
 
 \subsection{First pass: Remove complex operands ($L_{if}^{sc}$)}
