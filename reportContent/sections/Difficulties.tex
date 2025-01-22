@@ -7,8 +7,11 @@ In the initial project presentation, our conceptual implementation of the compil
 \subsection{Aporia Wrapper}
 %TODO Ephraim
 
-\subsection{Aporia Interpreter}
-While testing our compiler, we encountered some problems and unexpected behaviour of the Aporia Interpreter kindly provided by Ali.
+\subsection{Building Aporia Interpreter}
+The Aporia interpreter provided by Ali was written in C++ and had to be compiled before it could be used. On both Linux and Windows there were issues with the compilation process. On Linux, there were some missing libraries while on Windows, the file extensions were different making it difficult to use the wrapper for testing. The problems were resolved on Linux by adding the necessary libraries to the files where they were needed. On Windows, the fix was to use WSL and use the same approach as on Linux.
+
+\subsection{Aporia Interpreter behaviour}
+While testing our compiler, we encountered some problems and unexpected behaviour of the Aporia Interpreter.
 In print statements, the interpreter added a trailing space to each output, which was not present in the original program. This caused the output of our compiled program to differ from the expected output.
 Another issue was that the interpreter did not support running empty \texttt{.spp} files, which caused the interpreter to crash when trying to do so.
 Lastly, the interpreter had an issue that lead to the example given in Figure~\ref{code:aporia_issue} to output 1 even though the expected output was 0.
