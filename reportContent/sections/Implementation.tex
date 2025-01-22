@@ -1,7 +1,28 @@
 \section{Implementation}
 
 \subsection{Overview}
-\lipsum[1]
+This chapter goes over all of the compilation steps that were implemented to transform the input language $L_{if}$ into the output language $L_{cfi}$. 
+The respective grammars of both languages are shown in Figure~\ref{bnf:lif} and Figure~\ref{bnf:lcfi}.
+The compiler is implemented in Python and consists of three passes, each of which is responsible for specific transformations.
+The following sections describe each pass in detail and show the transformations that are applied to the input program using the example program from Figure~\ref{code:lif}.
+
+\begin{figure}[h]
+	\centering
+	\begin{bnf}[row{-} = {bg = gray9}]
+		cmp ::= != // == // < // <= // > // >=;;
+		exp ::= int // input\_int() // -exp
+		| exp + exp // exp - exp
+		| (exp) // var
+		| True // False // exp and exp
+		| exp or exp // not exp // exp cmp exp
+		| exp if exp else exp;;
+		stmt ::= print(exp) // exp // var = exp
+		| if exp $\colon$ stmt$^+$ else $\colon$ stmt$^+$;;
+		$L_{if}$ ::= stmt$^+$
+	\end{bnf}
+	\caption{Backus Naur Form Grammar of $L_{if}$}
+	\label{bnf:lif}
+\end{figure}
 
 \begin{figure}[h]
 	\centering
@@ -23,28 +44,20 @@
 		$L_{cfi}$ ::= declar$^*$ stmt$^*$
 	\end{bnf}
 	\caption{Backus Naur Form Grammar of $L_{cfi}$}
-	\label{lcfi}
+	\label{bnf:lcfi}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\begin{bnf}[row{-} = {bg = gray9}]
-		cmp ::= != // == // < // <= // > // >=;;
-		exp ::= int // input\_int() // -exp
-		| exp + exp // exp - exp
-		| (exp) // var
-		| True // False // exp and exp
-		| exp or exp // not exp // exp cmp exp
-		| exp if exp else exp;;
-		stmt ::= print(exp) // exp // var = exp
-		| if exp $\colon$ stmt$^+$ else $\colon$ stmt$^+$;;
-		$L_{if}$ ::= stmt$^+$
-	\end{bnf}
-	\caption{Backus Naur Form Grammar of $L_{if}$}
-	\label{lif}
+	\lstinputlisting[language=python]{reportContent/code_examples/0_pres_example.py}
+	\caption{$L_{if}$ Example Program Before Compilation}
+	\label{code:lif}
 \end{figure}
 
 \subsection{First pass: Remove complex operands ($L_{if}^{sc}$)}
+
+
+The first pass of the compiler lays an important foundation for each of following passes. It takes the $L_{if}$ AST of the original program as input and performins the following four transformations leading to the intermediary language $L_{if}^{sc}$ and its corresponding AST as output:
 
 \begin{figure}[h!]
 	\centering
@@ -63,34 +76,35 @@
 	\label{bnf:sc}
 \end{figure}
 
-The first pass of the compiler lays an important foundation for each of following passes. It simplifies the input program by performing the following four transformations:
-
 \subsubsection{Remove top level expressions that have no effect:}
-Any top level expression like a simple addition \texttt{1 + 2} or a boolean operation \texttt{true and false} is removed from the program.
-This goes against the principle of Aporia, which wants to make the original program as complicated as possible but was necessary to simplify the implementation of the compiler.
+Any top level expression like a simple addition \texttt{1 + 2} or a boolean operation \texttt{True and False} is removed from the program because it does not contribute to any side effects. In the example program from Figure~\ref{code:lif}, this leads to line 2 being removed.
+This transformation goes against the principle of Aporia, which wants to make the original program as complicated as possible but was necessary to simplify the implementation of the compiler.
 
 \subsubsection{Create variables for complex conditions:}
 The predicates in the statements of $L_{cfi}$ cannot be complex boolean expressions but only variables or the two boolean constants \texttt{true} and \texttt{false}.
 Hence, if the compiler encounters a complex boolean expression as the condition of an if-statement, it creates a new boolean variable and assigns the complex expression to it. 
 The compiler then replaces the complex expression with the new variable as the condition.
+This transformation can be seen on lines 2 and 4 in Figure~\ref{code:sc}.
 
 \subsubsection{Remove else branches:}
 Each statement in $L_{cfi}$ can only have one branch, so the compiler must remove the else branch of if-statements.
 In order to complete this step, the compiler assigns the negated condition of the if-statement to a new boolean variable.
 This variable is then used as the condition of a second if-statement, which contains the else branch of the original statement as its body.
+On line 3 of Figure~\ref{code:sc}, the assignment of the negation of the original condition can be seen which is then used as the condition on line 12 for the new if-statement representing the else branch of the original program.
 
 \subsubsection{Turn if-expressions into if-statements:}
-$L_{cfi}$ does not support if-expressions, so the compiler must transform them into if-statements with empty else branches. This is done in a similar way as in the exercise part of the seminar.
+$L_{cfi}$ does not support if-expressions, so the compiler must transform them into if-statements with simple conditions and empty else branches. This is done in a similar fashion as in the exercise part of the seminar.
 First, the condition is made atomic and the its negation assigned to a new variable as in the previous steps.
 Then, two if-statements are created, one for the body and one for the orelse branch of the original if-expression.
-Since top level expressions are ignored, the only context that if-expressions can occur in are variable assignments either as an original statement or to atomify a complex condition.
+Since top level expressions are ignored, the only context that if-expressions can occur in are print statements or variable assignments either as top level statements or to atomify a complex condition.
+If the expression is part of a top level assignment, the variable name is given by the original program. In both other cases, the compiler generates a new variable name.
 The result of the if-expression must thus always be assigned to the given variable name as the last statement of the new body in the new if-statement.
-If the expression is part of a top level assign, the variable name is given by the original program. Else, a new variable name is generated.
+The whole transformation of an if-expression are shown in lines 5-10 of Figure~\ref{code:sc}.
 
 \begin{figure}[h]
 	\centering
 	\lstinputlisting[language=python]{reportContent/code_examples/1_pres_example.py}
-	\caption{Result after the first pass of example program}
+	\caption{$L_{if}^{sc}$ Representation After the First Pass of Example Program}
 	\label{code:sc}
 \end{figure}
 
