@@ -7,6 +7,7 @@ The goal of this project was to implement a working compiler that translates the
 
 \subsection{Implementation}
 To achieve the goal, the compiler was implemented in a step-wise approach as was introduced during the course of the lecture. These passes were created from scratch via trial and error. The compiler was implemented in Python and uses the \texttt{ast} module to parse the input program. To ensure that it works correctly, the compiler was tested with a variety of programs until it was able to compile all test programs and produce the expected output behaviour after they were interpreted.
+To use the provided Aporia interpreter by Ali, a Python wrapper was written which creates a \texttt{.spp} file from the compiled program and then runs the Aporia interpreter on it while rerouting the output for behaviour comparison.
 
 \subsection{Results}
 The compiler was able to successfully compile all test programs and produce the expected output behaviour after they were interpreted. There is no formal proof that the compiler is mathematically correct, but the extensive testing of the compiler with a variety of programs gives us great confidence that it is working as intended.
