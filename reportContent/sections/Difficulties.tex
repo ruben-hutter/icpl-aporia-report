@@ -1,3 +1,29 @@
 \section{Difficulties}
+In this chapter, we will discuss the difficulties we encountered during the course of the project.
 
-Write some difficulties you encountered during the project. This can be technical difficulties, difficulties with the group, etc.
+\subsection{Compiler Passes}
+In the initial project presentation, our conceptual implementation of the compiler consisted of four passes, the additional pass being the separation of the "Flatten and Make everything an if" pass from subsection~\ref{subsec:flatten}. This approach would have allowed the body of an if-statement to contain more than one statement after the "flatten" pass before creating an if for each statement in "make everything an if". However, this lead to the challenge of having to figure out when a new if-statement for the same condition should be created and when the body of the current if-statement should be extended. Therefore, we decided to merge the two passes into one, thus simplifying the implementation.
+
+\subsection{Aporia Wrapper}
+%TODO Ephraim
+
+\subsection{Aporia Interpreter}
+While testing our compiler, we encountered some problems and unexpected behaviour of the Aporia Interpreter kindly provided by Ali.
+In print statements, the interpreter added a trailing space to each output, which was not present in the original program. This caused the output of our compiled program to differ from the expected output.
+Another issue was that the interpreter did not support running empty \texttt{.spp} files, which caused the interpreter to crash when trying to do so.
+Lastly, the interpreter had an issue that lead to the example given in Figure~\ref{code:aporia_issue} to output 1 even though the expected output was 0.
+Luckily, all these issues were quickly resolved by Ali, and we could continue testing our compiler.
+
+\begin{figure}[h!]
+	\begin{lstlisting}
+bool pred_0
+true: pred_0 = !false
+false: print("", 1)
+pred_0: print("", 0) 
+	\end{lstlisting}
+	\caption{$L_{cfi}$ program that caused wrong output of Aporia Interpreter}
+	\label{code:aporia_issue}
+\end{figure}
+
+\subsection{Project Time}
+Due to exams and projects in other lectures it would have been impossible for us to finish this project in time. We are very grateful that the deadline was extended by three days which allowed us to finish in time and deliver a working compiler as well as to complete this paper.
